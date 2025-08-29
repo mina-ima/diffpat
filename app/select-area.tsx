@@ -3,6 +3,7 @@ import { View, StyleSheet, Image, Text } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
 import { useState } from 'react';
+import { Slider } from 'react-native-paper';
 import Button from '@/components/common/Button';
 
 export default function SelectAreaScreen() {
@@ -12,6 +13,7 @@ export default function SelectAreaScreen() {
   const start = useSharedValue({ x: 0, y: 0 });
   const offset = useSharedValue({ x: 0, y: 0 });
   const [selection, setSelection] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
+  const [sensitivity, setSensitivity] = useState(50);
 
   const panGesture = Gesture.Pan()
     .onBegin(() => {
@@ -60,13 +62,20 @@ export default function SelectAreaScreen() {
     };
   });
 
+  const handleCompare = () => {
+    // TODO: Navigate to results screen in a later phase
+    console.log('Proceeding with:', { selection, sensitivity, image1, image2 });
+    // For now, just go back to home
+    router.push('/(tabs)');
+  }
+
   if (!image1) {
     return <Text>Image not found</Text>;
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.instructions}>Draw a rectangle on the area to compare.</Text>
+      <Text style={styles.instructions}>1. Draw a rectangle on the area to compare.</Text>
       <GestureDetector gesture={panGesture}>
         <View style={styles.imageContainer}>
           <Image source={{ uri: image1 }} style={styles.image} />
@@ -81,11 +90,25 @@ export default function SelectAreaScreen() {
           )}
         </View>
       </GestureDetector>
+      
+      <View style={styles.controlsContainer}>
+        <Text style={styles.instructions}>2. Set the detection sensitivity.</Text>
+        <Slider
+          style={styles.slider}
+          value={sensitivity}
+          onValueChange={setSensitivity}
+          minimumValue={0}
+          maximumValue={100}
+          step={1}
+        />
+        <Text>{Math.round(sensitivity)}%</Text>
+      </View>
+
       <View style={styles.buttonContainer}>
         <Button 
           mode="contained" 
           disabled={!selection}
-          onPress={() => console.log('Proceeding with selection:', selection)}
+          onPress={handleCompare}
         >
           Compare This Area
         </Button>
@@ -100,15 +123,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#f0f0f0',
+    padding: 10,
   },
   instructions: {
     fontSize: 18,
-    margin: 20,
+    marginVertical: 10,
     textAlign: 'center',
   },
   imageContainer: {
-    width: '90%',
-    height: '60%',
+    width: '95%',
+    height: '50%',
     borderWidth: 1,
     borderColor: '#ccc',
   },
@@ -121,6 +145,15 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'green', // Final selection color
     backgroundColor: 'transparent',
+  },
+  controlsContainer: {
+    width: '90%',
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  slider: {
+    width: '100%',
+    height: 40,
   },
   buttonContainer: {
     marginTop: 20,
