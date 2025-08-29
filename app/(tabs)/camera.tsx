@@ -1,10 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function HomeScreen() {
+export default function CameraScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>まちがいパトロール</Text>
-      <Text>Welcome to Mistake Patrol!</Text>
+      <Text style={styles.title}>Camera Screen</Text>
     </View>
   );
 }
