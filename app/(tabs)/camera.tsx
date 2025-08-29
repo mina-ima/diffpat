@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import { Camera, CameraView } from 'expo-camera';
 import { useState, useRef } from 'react';
@@ -6,6 +7,7 @@ import { Button, StyleSheet, Text, TouchableOpacity, View, Image, Alert } from '
 type Photo = string | null;
 
 export default function CameraScreen() {
+  const router = useRouter();
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [image1, setImage1] = useState<Photo>(null);
   const [image2, setImage2] = useState<Photo>(null);
@@ -47,13 +49,10 @@ export default function CameraScreen() {
       setCurrentPhoto(null);
       setStep(2);
     } else {
-      setImage2(currentPhoto);
+      const finalImage2 = currentPhoto;
+      setImage2(finalImage2);
       setCurrentPhoto(null);
-      Alert.alert(
-        "Photos Taken!",
-        "Both images have been captured.",
-        [{ text: "OK", onPress: () => console.log("Both photos taken", { image1, image2: currentPhoto }) }]
-      );
+      router.push({ pathname: '/select-area', params: { image1: image1, image2: finalImage2 } });
     }
   };
 
