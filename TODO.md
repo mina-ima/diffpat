@@ -15,9 +15,9 @@
 ## 🛠 開発ToDoリスト（フェーズ順）
 
 #### 📁 フェーズ0：初期環境構築
-- [ ] 開発環境の選定（Flutter or React Native or Expo）
-- [ ] Web対応の構成検討（PWA or SPA）
-- [ ] GitHubリポジトリ作成と初期ファイルpush
+- [x] 開発環境の選定（Flutter or React Native or Expo）
+- [x] Web対応の構成検討（PWA or SPA）
+- [x] GitHubリポジトリ作成と初期ファイルpush
 - [ ] 基本画面構成のルーティング設定（ホーム／カメラ／結果）
 - [ ] UIフレームワーク・アニメーションライブラリ導入
 - [ ] 共通コンポーネント設計（Header／ボタン／画像ビュー）
