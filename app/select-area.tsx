@@ -1,10 +1,12 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { View, StyleSheet, Image, Text, ActivityIndicator, Alert } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
 import { useState } from 'react';
 import { Slider } from 'react-native-paper';
 import Button from '@/components/common/Button';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
+import { processImagesWithOpenCV } from '../lib/opencv';
 
 export default function SelectAreaScreen() {
   const router = useRouter();
@@ -14,6 +16,7 @@ export default function SelectAreaScreen() {
   const offset = useSharedValue({ x: 0, y: 0 });
   const [selection, setSelection] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
   const [sensitivity, setSensitivity] = useState(50);
+  const [isLoading, setIsLoading] = useState(false);
 
   const panGesture = Gesture.Pan()
     .onBegin(() => {
@@ -62,12 +65,40 @@ export default function SelectAreaScreen() {
     };
   });
 
-  const handleCompare = () => {
-    // TODO: Navigate to results screen in a later phase
-    console.log('Proceeding with:', { selection, sensitivity, image1, image2 });
-    // For now, just go back to home
-    router.push('/(tabs)');
-  }
+  const handleCompare = async () => {
+    if (!selection || !image1 || !image2) {
+      Alert.alert('Error', 'Please select an area and ensure both images are available.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Crop images based on selection
+      const croppedImage1 = await manipulateAsync(
+        image1,
+        [{ crop: selection }],
+        { compress: 1, format: SaveFormat.JPEG }
+      );
+      const croppedImage2 = await manipulateAsync(
+        image2,
+        [{ crop: selection }],
+        { compress: 1, format: SaveFormat.JPEG }
+      );
+
+      // Process with OpenCV (placeholder for now)
+      const result = await processImagesWithOpenCV(croppedImage1.uri, croppedImage2.uri, selection, sensitivity);
+      console.log('OpenCV processing result:', result);
+
+      // TODO: Navigate to results screen with result data
+      router.push('/(tabs)/result');
+
+    } catch (error) {
+      console.error('Error during image processing:', error);
+      Alert.alert('Error', 'Failed to process images.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!image1) {
     return <Text>Image not found</Text>;
@@ -75,6 +106,12 @@ export default function SelectAreaScreen() {
 
   return (
     <View style={styles.container}>
+      {isLoading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text style={styles.loadingText}>Processing images...</Text>
+        </View>
+      )}
       <Text style={styles.instructions}>1. Draw a rectangle on the area to compare.</Text>
       <GestureDetector gesture={panGesture}>
         <View style={styles.imageContainer}>
@@ -107,7 +144,7 @@ export default function SelectAreaScreen() {
       <View style={styles.buttonContainer}>
         <Button 
           mode="contained" 
-          disabled={!selection}
+          disabled={!selection || isLoading}
           onPress={handleCompare}
         >
           Compare This Area
@@ -157,5 +194,16 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
-  }
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+  },
 });
