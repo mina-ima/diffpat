@@ -1,16 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Platform } from 'react-native';
 
 interface PatroboSpeechBubbleProps {
   message: string;
-  patroboImage?: any; // Use 'any' for require()
 }
 
-const PatroboSpeechBubble: React.FC<PatroboSpeechBubbleProps> = ({ message, patroboImage }) => {
+const PatroboSpeechBubble: React.FC<PatroboSpeechBubbleProps> = ({ message }) => {
   return (
     <View style={styles.container}>
-      {patroboImage && (
-        <Image source={patroboImage} style={styles.patroboImage} />
+      {Platform.OS !== 'web' && (
+        <Image source={require('@/assets/images/patrobo.png')} style={styles.patroboImage} />
       )}
       <View style={styles.bubble}>
         <Text style={styles.messageText}>{message}</Text>

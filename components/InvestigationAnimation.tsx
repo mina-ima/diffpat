@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Animated, { useSharedValue, withTiming, Easing, useAnimatedStyle, withRepeat, runOnJS } from 'react-native-reanimated';
 import PatroboSpeechBubble from '../components/PatroboSpeechBubble';
-
-const patroboImage = require('../assets/images/patrobo.png');
 
 interface InvestigationAnimationProps {
   image1Uri: string;
@@ -67,10 +65,10 @@ const InvestigationAnimation: React.FC<InvestigationAnimationProps> = ({ image1U
 
   return (
     <View style={styles.container}>
-      <Animated.Image source={{ uri: image1Uri }} style={[styles.backgroundImage, image1Style]} />
-      <Animated.Image source={{ uri: image2Uri }} style={[styles.backgroundImage, image2Style]} />
+      <Animated.View style={[styles.backgroundImage, image1Style, { backgroundColor: 'gray' }]} />
+      <Animated.View style={[styles.backgroundImage, image2Style, { backgroundColor: 'darkgray' }]} />
       <View style={styles.overlay}>
-        <PatroboSpeechBubble message="調査中パト！" patroboImage={patroboImage} />
+        <PatroboSpeechBubble message="調査中パト！" />
       </View>
     </View>
   );
@@ -87,7 +85,6 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -101,5 +98,3 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
-
-export default InvestigationAnimation;

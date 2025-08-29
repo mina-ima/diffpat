@@ -1,8 +1,6 @@
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React from 'react';
 import PatroboSpeechBubble from '@/components/PatroboSpeechBubble';
-
-const patroboImage = require('@/assets/images/patrobo.png');
 
 export default function HowToUseScreen() {
   const steps = [
@@ -39,7 +37,8 @@ export default function HowToUseScreen() {
       {steps.map((step, index) => (
         <View key={index} style={styles.stepContainer}>
           <Text style={styles.stepTitle}>{step.title}</Text>
-          <PatroboSpeechBubble message={step.patroboMessage} patroboImage={patroboImage} />
+          <PatroboSpeechBubble message={step.patroboMessage} />
+          <View style={styles.stepImage} />
           <Text style={styles.stepDescription}>{step.description}</Text>
         </View>
       ))}
@@ -73,5 +72,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     lineHeight: 24,
+  },
+  stepImage: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'contain',
+    marginBottom: 10,
+    backgroundColor: '#e0e0e0', // Placeholder background
   },
 });
