@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import Animated, { useSharedValue, withTiming, Easing, useAnimatedStyle, withRepeat, runOnJS } from 'react-native-reanimated';
+import PatroboSpeechBubble from '../components/PatroboSpeechBubble';
+
+const patroboImage = require('../assets/images/patrobo.png');
 
 interface InvestigationAnimationProps {
   image1Uri: string;
@@ -67,7 +70,7 @@ const InvestigationAnimation: React.FC<InvestigationAnimationProps> = ({ image1U
       <Animated.Image source={{ uri: image1Uri }} style={[styles.backgroundImage, image1Style]} />
       <Animated.Image source={{ uri: image2Uri }} style={[styles.backgroundImage, image2Style]} />
       <View style={styles.overlay}>
-        <Text style={styles.text}>調査中…</Text>
+        <PatroboSpeechBubble message="調査中パト！" patroboImage={patroboImage} />
       </View>
     </View>
   );

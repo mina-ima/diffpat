@@ -1,32 +1,35 @@
 import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import React from 'react';
+import PatroboSpeechBubble from '@/components/PatroboSpeechBubble';
+
+const patroboImage = require('@/assets/images/patrobo.png');
 
 export default function HowToUseScreen() {
   const steps = [
     {
       title: '1. 写真を2枚撮ろう',
-      description: '1枚目と2枚目の写真を撮影します。',
-      image: require('@/assets/images/placeholder-step1.png'), // Placeholder
+      patroboMessage: 'まずは、比較したいものを2枚撮影するパト！',
+      description: '1枚目と2枚目の写真を撮影します。同じアングルから撮るのがポイントパト！',
     },
     {
       title: '2. どこを調べたいか選ぼう',
-      description: '指で画像をドラッグして、比較したい範囲を選択します。',
-      image: require('@/assets/images/placeholder-step2.png'), // Placeholder
+      patroboMessage: '指で囲んで、どこを調べるか教えてほしいパト！',
+      description: '指で画像をドラッグして、比較したい範囲を選択します。最小サイズは100x100pxパト！',
     },
     {
       title: '3. 感度を調整しよう',
-      description: '差分検出の感度をスライダーで調整します。',
-      image: require('@/assets/images/placeholder-step3.png'), // Placeholder
+      patroboMessage: '間違いを見つける感度を調整するパト！',
+      description: '差分検出の感度をスライダーで調整します。感度が高いほど、小さな違いも見つけやすいパト！',
     },
     {
       title: '4. 調査ボタンを押してね',
-      description: '「Compare This Area」ボタンを押して、調査を開始します。',
-      image: require('@/assets/images/placeholder-step4.png'), // Placeholder
+      patroboMessage: '準備ができたら、調査開始パト！',
+      description: '「Compare This Area」ボタンを押して、調査を開始します。少し時間がかかるパト！',
     },
     {
       title: '5. パトロボが間違いを見つけてくれるよ！',
-      description: 'パトロボが画像を分析し、間違いを赤枠で表示します。',
-      image: require('@/assets/images/placeholder-step5.png'), // Placeholder
+      patroboMessage: 'パトロボにお任せパト！間違いを見つけてくるパト！',
+      description: 'パトロボが画像を分析し、間違いを赤枠で表示します。見逃しは許さないパト！',
     },
   ];
 
@@ -36,7 +39,7 @@ export default function HowToUseScreen() {
       {steps.map((step, index) => (
         <View key={index} style={styles.stepContainer}>
           <Text style={styles.stepTitle}>{step.title}</Text>
-          <Image source={step.image} style={styles.stepImage} />
+          <PatroboSpeechBubble message={step.patroboMessage} patroboImage={patroboImage} />
           <Text style={styles.stepDescription}>{step.description}</Text>
         </View>
       ))}
@@ -65,13 +68,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
-  },
-  stepImage: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'contain',
-    marginBottom: 10,
-    backgroundColor: '#e0e0e0', // Placeholder background
   },
   stepDescription: {
     fontSize: 16,
