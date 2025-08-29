@@ -1,3 +1,4 @@
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import { Camera, CameraView } from 'expo-camera';
 import { useState, useRef } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image, Alert } from 'react-native';
@@ -30,7 +31,12 @@ export default function CameraScreen() {
     if (cameraRef.current) {
       const photoData = await cameraRef.current.takePictureAsync();
       if (photoData) {
-        setCurrentPhoto(photoData.uri);
+        const manipulatedImage = await manipulateAsync(
+          photoData.uri,
+          [{ resize: { width: 1080 } }],
+          { compress: 0.9, format: SaveFormat.JPEG }
+        );
+        setCurrentPhoto(manipulatedImage.uri);
       }
     }
   };
