@@ -5,8 +5,8 @@
 バージョン：v1.0（初期リリース）
 
 対応プラットフォーム：
-•iOS / Android（クロスプラットフォーム開発：Flutter または React Native 想定）
-•Webブラウザ対応（PWA形式も検討）
+•iOS / Android（クロスプラットフォーム開発：React Native, Bare Workflowに移行済み）
+•Webブラウザ対応（React Native Web, PWA形式も検討）
 
 ⸻
 
@@ -54,8 +54,9 @@
 ## 4. 🔍 差分調査処理
 
 ### 4.1 前処理
-•アライメント（画像整列）処理：
+•アライメント（特徴点検出→射影変換）処理：
 •ORB/SIFTなどの特徴点マッチングにより自動で整列
+•iOS/Android版では`react-native-fast-opencv`、Web版ではOpenCV.jsを使用
 •射影変換で重ね合わせ
 •対象：指定範囲内の領域を切り出して使用
 
