@@ -7,6 +7,7 @@ import { Slider } from 'react-native-paper';
 import Button from '@/components/common/Button';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import { processImagesWithOpenCV } from '../lib/opencv';
+import InvestigationAnimation from '@/components/InvestigationAnimation';
 
 export default function SelectAreaScreen() {
   const router = useRouter();
@@ -90,14 +91,19 @@ export default function SelectAreaScreen() {
       console.log('OpenCV processing result:', result);
 
       // TODO: Navigate to results screen with result data
-      router.push('/(tabs)/result');
+      router.push({ pathname: '/(tabs)/result', params: { image1: image1, diffs: JSON.stringify(result.diffs) } });
 
     } catch (error) {
       console.error('Error during image processing:', error);
       Alert.alert('Error', 'Failed to process images.');
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false); // Animation handles navigation
     }
+  };
+
+  const handleAnimationEnd = (diffs: any) => {
+    setIsLoading(false);
+    // router.push({ pathname: '/(tabs)/result', params: { image1: image1, diffs: JSON.stringify(diffs) } });
   };
 
   if (!image1) {
@@ -107,10 +113,11 @@ export default function SelectAreaScreen() {
   return (
     <View style={styles.container}>
       {isLoading && (
-        <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color="#0000ff" />
-          <Text style={styles.loadingText}>Processing images...</Text>
-        </View>
+        <InvestigationAnimation 
+          image1Uri={image1} 
+          image2Uri={image2} 
+          onAnimationEnd={() => handleAnimationEnd({ diffs: [] })} // Pass actual diffs later
+        />
       )}
       <Text style={styles.instructions}>1. Draw a rectangle on the area to compare.</Text>
       <GestureDetector gesture={panGesture}>
